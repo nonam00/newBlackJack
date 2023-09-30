@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\c2plus\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj": {}
+    "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj": {}
   },
   "projects": {
-    "D:\\c2plus\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj": {
+    "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\c2plus\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
+        "projectUniqueName": "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
         "projectName": "C# Blackjack",
-        "projectPath": "D:\\c2plus\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
-        "packagesPath": "C:\\Users\\Светлана\\.nuget\\packages\\",
-        "outputPath": "D:\\c2plus\\C# Blackjack\\C# Blackjack\\obj\\",
+        "projectPath": "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
+        "packagesPath": "C:\\Users\\raisk\\.nuget\\packages\\",
+        "outputPath": "D:\\c#\\C# Blackjack\\C# Blackjack\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Светлана\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\raisk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

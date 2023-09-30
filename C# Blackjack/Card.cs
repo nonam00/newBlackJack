@@ -1,45 +1,37 @@
-﻿namespace C__Blackjack
+﻿namespace C__Blackjack;
+
+public class Card
 {
-    internal class Card //entity of the card
+    public static List<string> pack = new List<string>(); //колода карт
+    private static int pack_count = 52; //счётчик количества карт в колоде
+    private Random rnd = new Random();
+
+    public string Name { get; set; } //имя карты
+    public int Mark { get; set; } //значение карты в очках
+    public static void PackInit() //инициализация колоды карт
     {
-        public static List<string> pack = new(); //колода карт
-        private static int pack_count = 52; //счётчик количества карт в колоде 
-
-        private string name; //имя карты
-        private int mark; //значение карты в очках
-        public static void PackInit() //инициализация колоды карт
+        for (int i = 2; i <= 10; i++)
+            for (int j = 0; j < 4; j++)
+                pack.Add(i.ToString());
+        for (int i = 0; i < 4; i++)
         {
-            for (int i = 2; i <= 10; i++)
-                for (int j = 0; j < 4; j++)
-                    pack.Add(i.ToString());
-            for (int i = 0; i < 4; i++)
-            {
-                pack.Add("J");
-                pack.Add("Q");
-                pack.Add("K");
-                pack.Add("A");
-            }
+            pack.Add("J");
+            pack.Add("Q");
+            pack.Add("K");
+            pack.Add("A");
         }
-        public Card()
-        {
-            Random rnd = new();
+        pack_count = 52;
+    }
+    public Card()
+    {
+        Name = pack[rnd.Next(0, pack_count--)];
+        pack.Remove(Name);
 
-            name = pack[rnd.Next(0, pack_count--)];
-            pack.Remove(name);
-
-            if (name == "J" || name == "Q" || name == "K")
-                mark = 10;
-            else if (name == "A")
-                mark = 11;
-            else
-                mark = Convert.ToInt32(name);
-        }
-        public string Name
-        { get { return name; } }
-        public int Mark
-        {
-            get { return mark; }
-            set { mark = value; }
-        }
+        if (Name == "J" || Name == "Q" || Name == "K")
+            Mark = 10;
+        else if (Name == "A")
+            Mark = 11;
+        else
+            Mark = Convert.ToInt32(Name);
     }
 }
