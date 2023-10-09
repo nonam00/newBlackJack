@@ -59,7 +59,7 @@ public class Game
             Card.PackInit();
             Console.WriteLine("Money: " + money);
 
-            Console.WriteLine("Make a deal:");
+            Console.WriteLine("Make a deal: (to leave the game place a bet of 0)");
             double stavka;
             bool _try = Double.TryParse(Console.ReadLine(), out stavka);
 
