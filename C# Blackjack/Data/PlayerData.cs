@@ -1,18 +1,22 @@
 ﻿namespace C__Blackjack.Data;
-public class PlayerData // information about the player
+
+// information about the player
+[Serializable]
+public class PlayerData 
 {
-    public string? Name { get; set; }
+    public string Name { get; set; }
     public double Balance { get; set; }
 
     private int wins;
     private int loses;
+
     public int Wins
     {
         get => wins;
         set
         {
             if (value < 0)
-                throw new Exception("The log file was corrupted");
+                throw new ArgumentException("File with players data was corrupted");
             wins = value;
         }
     }
@@ -22,11 +26,11 @@ public class PlayerData // information about the player
         set
         {
             if (value < 0)
-                throw new Exception("The log file was corrupted");
+                throw new Exception("File with players data file was corrupted");
             loses = value;
         }
     }
-    public PlayerData(string? name, double balance, int wins, int loses)
+    public PlayerData(string name, double balance, int wins, int loses)
     {
         Name = name;
         Balance = balance;

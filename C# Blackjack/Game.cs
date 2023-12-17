@@ -4,15 +4,14 @@ using C__Blackjack.Data;
 using C__Blackjack.Players;
 public class Game
 {
-    private Hand dealer;
-    private Hand player;
+    private Dealer dealer;
+    private Player player;
 
-    private DataHandler dataHandler;
+    private DataHandler dataHandler = new DataHandler();
 
     private double money;
     public Game()
     {
-        dataHandler = new DataHandler();
         Authorization();
         while (true)
         {
@@ -51,29 +50,32 @@ public class Game
         }
     }
 
+    // Main game process 
     private void Table()
     {
         while (money > 0)
         {
             Console.Clear();
             Card.PackInit();
+
             Console.WriteLine("Money: " + money);
 
             Console.WriteLine("Make a deal: (to leave the game place a bet of 0)");
-            double stavka;
-            bool _try = Double.TryParse(Console.ReadLine(), out stavka);
 
-            if (!_try || stavka > money || stavka < 0)
+            double bet;
+            bool _try = Double.TryParse(Console.ReadLine(), out bet);
+
+            if (!_try || bet > money || bet < 0)
                 continue;
 
-            if (stavka == 0) //game ends if price will be equal to 0
+            if (bet == 0) // Game ends if price will be equal to 0
             {
                 Console.WriteLine("Thanks for the game");
                 Console.WriteLine("Money: " + money);
                 break;
             }
 
-            money -= stavka;
+            money -= bet;
 
             dealer = new Dealer();
             player = new Player();
@@ -82,10 +84,11 @@ public class Game
             while (true)
             {
                 Console.Clear();
-                AllPrint(dealer, player, 1);
-                if (player.auto_win() || dealer.auto_win())
-                    break;
-                PrintChoices(stavka);
+                PrintAll(dealer, player, 1);
+
+                if (player.Autowin() || dealer.Autowin()) break;
+
+                DisplayChoices(bet);
                 choice = Console.ReadLine();
                 Console.WriteLine();
 
@@ -95,19 +98,18 @@ public class Game
                 else if (choice == "Hit")
                 {
                     player.AddCard();
-                    if (player.auto_win())
-                        break;
+
+                    if (player.Autowin()) break;
                     else if (player.Bust())
                     {
                         player.BustCancel();
-                        if (player.Score > 21)
-                            break;
+                        if (player.Score > 21) break;
                     }
                 }
-                else if (choice == "Double" && stavka * 2 <= money + stavka)
+                else if (choice == "Double" && bet * 2 <= money + bet)
                 {
-                    stavka *= 2;
-                    Console.WriteLine($"Stavka: {stavka}\n");
+                    bet *= 2;
+                    Console.WriteLine($"Stavka: {bet}\n");
                     Thread.Sleep(2000);
                     player.AddCard();
                     if (player.Bust())
@@ -124,67 +126,67 @@ public class Game
 
             Console.Clear();
 
-            AllPrint(dealer, player, 2);
+            PrintAll(dealer, player, 2);
 
-            if (player.auto_win())
+            if (player.Autowin())
             {
-                if (dealer.auto_win())
+                if (dealer.Autowin())
                 {
                     Console.WriteLine("Draw");
-                    money += stavka;
+                    money += bet;
                 }
                 else
                 {
                     Console.WriteLine("21!");
-                    money += 2.5 * stavka;
-                    Console.WriteLine("+" + stavka * 1.5);
+                    money += 2.5 * bet;
+                    Console.WriteLine("+" + bet * 1.5);
                 }
             }
 
             else if (player.Bust())
             {
                 Console.WriteLine("Bust");
-                Final('-', stavka);
+                Final('-', bet);
             }
 
             else if (player.Score > dealer.Score)
             {
-                DealerBehavior();
+                dealer.BehaviorOnLose(player.Score);
+
+                PrintAll(dealer, player, 2);
 
                 if (dealer.Bust())
                 {
                     Console.WriteLine("Win");
-                    Final('+', stavka);
-                    money += stavka * 2;
+                    Final('+', bet);
+                    money += bet * 2;
                 }
             }
 
             if (dealer.Score == player.Score)
             {
                 Console.WriteLine("Draw");
-                money += stavka;
+                money += bet;
             }
-            else if (dealer.auto_win() || (!dealer.Bust() && player.Score < dealer.Score))
+            else if (dealer.Autowin() || (!dealer.Bust() && player.Score < dealer.Score))
             {
                 Console.WriteLine("Dealer wins");
-                Final('-', stavka);
+                Final('-', bet);
             }
 
-            if (money < dataHandler.CurrentPlayer.Balance)
-                dataHandler.CurrentPlayer.Loses++;
-
-            else if(money > dataHandler.CurrentPlayer.Balance)
-                dataHandler.CurrentPlayer.Wins++;
+            AfterGameDataUpdate();
 
             Console.ReadKey();
             Card.pack.Clear();
-            dataHandler.CurrentPlayer.Balance = money;
         }
         if (money <= 0)
+        {
             Console.WriteLine("\nCasino always wins");
+        }
     }
 
-    private void PrintChoices(double stavka)
+    // Display of available actions
+    private void DisplayChoices(double stavka)
     {
         Console.Write("Your choice: Stand, Hit");
 
@@ -196,63 +198,78 @@ public class Game
 
         Console.WriteLine();
     }
-
-    private void DealerBehavior() // A function that determines the behavior of the dealer in cases where the player has a better hand
+	
+    // Display game table
+    private void PrintAll(Dealer dealer, Player player, int gameStatus)
     {
-        while (dealer.Score < player.Score && !dealer.Bust())
-        {
-            Thread.Sleep(2000);
-            Console.Clear();
-
-            Console.WriteLine("Dealer hits\n");
-
-            dealer.AddCard();
-
-            if (dealer.Bust())
-                dealer.BustCancel();
-
-            AllPrint(dealer, player, 2);
-        }
-    }
-
-    //print game table
-    private void AllPrint(Hand dealer, Hand player, int game)
-    {
-        (dealer as Dealer).Print(game);
+        dealer.Print(gameStatus);
         Console.WriteLine("\n\n");
 
-        (player as Player).Print();
+        player.Print();
         Console.WriteLine("\n");
     }
 
-    //print game results
-    private void Final(char operation, double stavka)
+    // Display game results
+    private void Final(char operation, double bet)
     {
-        Console.WriteLine(operation.ToString() + stavka.ToString());
+        Console.WriteLine(operation.ToString() + bet.ToString());
     }
-    private void Authorization() // user authorization
+
+    private void AfterGameDataUpdate()
     {
-        Console.WriteLine("Welcome to the Casino\n" +
-            "What's your name");
-        string? name = Console.ReadLine();
-        dataHandler.SetCurr(name);
+		if (money < dataHandler.CurrentPlayer.Balance)
+		{
+			dataHandler.CurrentPlayer.Loses++;
+		}
+
+		else if (money > dataHandler.CurrentPlayer.Balance)
+		{
+			dataHandler.CurrentPlayer.Wins++;
+		}
+
+		dataHandler.CurrentPlayer.Balance = money;
+	}
+
+	// User authorization
+	private void Authorization()
+    {
+        string name = string.Empty;
+        while(name==string.Empty)
+        {
+			Console.WriteLine("Welcome to the Casino\n" +
+			    "What's your name");
+			name = Console.ReadLine();
+            Console.Clear();
+        }
+
+        dataHandler.SetCurrentUser(name);
+
         money = dataHandler.CurrentPlayer.Balance;
+
         Console.Clear();
     }
 
-    private void TopUp()
+	// Replenishment of balance
+	private void TopUp()
     {
-        Console.WriteLine("Enter the amount to top up");
         double amount;
-        bool _try = Double.TryParse(Console.ReadLine(), out amount);
-        if (_try && amount>0)
+        bool _try = false;
+
+        while(!_try)
         {
-            money += amount;
-            dataHandler.CurrentPlayer.Balance = money;
-        }
+            Console.WriteLine("Enter the amount to top up");
+           _try = Double.TryParse(Console.ReadLine(), out amount) && amount > 0;
+			if (_try)
+			{
+				money += amount;
+				dataHandler.CurrentPlayer.Balance = money;
+			}
+            Console.Clear();
+		}
     }
 
-    private void Exit() //Leave the casino, save data
+	// Player leaves the casino, data saving
+	private void Exit() 
     {
         dataHandler.Exit();
         Console.WriteLine("Come back again!");

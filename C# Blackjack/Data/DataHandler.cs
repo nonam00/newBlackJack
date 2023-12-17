@@ -1,28 +1,25 @@
-﻿namespace C__Blackjack.Data;
+﻿using System.Text.Json;
+
+namespace C__Blackjack.Data;
 public class DataHandler
 {
-    private List<PlayerData>? data;
-    public PlayerData CurrentPlayer { get; set; }
-   
-    private int id; // индекс текущего пользователя в списке для обновления данных 
-    public DataHandler()
+    private readonly string fileName = "PlayersData.json"; // name of file with data about players
+    private List<PlayerData> data = new List<PlayerData>(); //information about all players
+	public PlayerData CurrentPlayer { get; set; }
+    private int id; // Current user id in data list
+	public DataHandler()
     {
-        data = new List<PlayerData>();
-        using StreamReader sr = new StreamReader("Data.txt"); //открытие потока на чтение
-        try
+        if (!File.Exists(fileName))
         {
-            while(!sr.EndOfStream)
-            {
-                string[] player = sr.ReadLine().Split(' '); //чтение строки файла, форматирование и запись в данных в массив
-                data.Add(new PlayerData (player[0], Double.Parse(player[1]), int.Parse(player[2]), int.Parse(player[3])));
-            }
+            File.Create(fileName);
         }
-        catch
-        {
-            throw new Exception("The log file was corrupted");
-        }
+
+		data = JsonSerializer.Deserialize<List<PlayerData>>(File.ReadAllText(fileName))
+            ?? throw new FileNotFoundException($"{fileName} was corrupted");
     }
-    public void SetCurr(string? name) // установление текущего пользователя 
+
+	// Determining the current user
+	public void SetCurrentUser(string name)
     {
         for(int i=0; i<data.Count; i++)
         {
@@ -36,36 +33,48 @@ public class DataHandler
         }
         NewPlayer(name);
     }
-    private void NewPlayer(string? name) // создание нового пользователя
+
+	//Creating a new player
+	private void NewPlayer(string name)
     {
-        Console.WriteLine("What is your balance?");
         double balance;
-        bool _try = Double.TryParse(Console.ReadLine(), out balance);
-        if(_try && balance > 0)
+        bool _try = false;
+        while(!_try)
         {
-            CurrentPlayer = new PlayerData(name, balance, 0, 0);
-            id = data.Count;
-            data.Add(CurrentPlayer);
-        }
-        else
-        {
-            Console.WriteLine("Welcome back when you get money");
+            Console.Clear();
+            Console.WriteLine("What is your balance?");
+            _try = Double.TryParse(Console.ReadLine(), out balance) && balance>=0;
+            if (balance == 0)
+            {
+                Console.WriteLine("Welcome back when you get money");
+            }
+            else if(_try)
+            {
+                CurrentPlayer = new PlayerData(name, balance, 0, 0);
+                id = data.Count;
+                data.Add(CurrentPlayer);
+            }
         }
     }
-    public void PrintStatistics() // вывод статистики текущего пользователя
+
+	//Display current user statistics
+	public void PrintStatistics()
     {
         Console.WriteLine(
             $"Balance: {CurrentPlayer.Balance}\n" +
             $"Wins: {CurrentPlayer.Wins}\n" +
             $"Loses: {CurrentPlayer.Loses}\n");
     }
-    public void Exit() //запись обновлённых данных в файл перед завершением программы
-    { 
+
+	//Writing updated data to a file before exiting the program
+	public void Exit()
+    {
+        if (id > data.Count) return;
+
         data[id] = CurrentPlayer;
-        using StreamWriter sw = new StreamWriter($"Data.txt");
-        for(int i=0; i<data.Count;i++)
-        {
-            sw.WriteLine(data[i]);
-        }
-    }
+
+		var options = new JsonSerializerOptions { WriteIndented = true };
+		string jsonString = JsonSerializer.Serialize(data, options);
+		File.WriteAllText("PlayersData.json", jsonString);
+	}
 }

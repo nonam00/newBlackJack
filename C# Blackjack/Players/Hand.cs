@@ -4,7 +4,8 @@ public abstract class Hand
 {
     protected List<Card> cards = new List<Card>();
     public int Score { get; set; }
-    //distribution of cards to the player
+
+    // Distribution of cards to the player
     public Hand()
     {
         Score = 0;
@@ -12,7 +13,7 @@ public abstract class Hand
             AddCard();
     }
 
-    //adds a card to the person
+    // Adds a card to the person
     public void AddCard()
     {
         Card temp = new();
@@ -20,7 +21,6 @@ public abstract class Hand
         cards.Add(temp);
     }
 
-    //do a split
     public void Split()
     {
         Score -= cards[cards.Count - 1].Mark;
@@ -28,7 +28,7 @@ public abstract class Hand
         AddCard();
     }
 
-    //ñhanges the value of card A to 1 if it is in hand
+    // Changes the value of card A to 1 if it is in hand
     public void BustCancel()
     {
         for (int i = 0; i < cards.Count; i++)
@@ -40,12 +40,12 @@ public abstract class Hand
             }
     }
 
-    //checking for the ability to split
+    // Checking for the ability to split
     public bool SplitCheck() => cards.Count == 2 && cards[0].Mark == cards[1].Mark;
 
-    //checks about score
-    public bool auto_win() => cards[0].Name == "A" && cards[1].Name == "A" || Score == 21;
+	// Check for the opportunity to win immediately
+	public bool Autowin() => cards[0].Name == "A" && cards[1].Name == "A" || Score == 21;
 
-    //bust check
+    // Bust check
     public bool Bust() => Score > 21;
 }
