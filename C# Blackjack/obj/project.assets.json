@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
+      "projectUniqueName": "D:\\c#\\C# Blackjack\\newBlackJack\\C# Blackjack\\C# Blackjack.csproj",
       "projectName": "C# Blackjack",
-      "projectPath": "D:\\c#\\C# Blackjack\\C# Blackjack\\C# Blackjack.csproj",
+      "projectPath": "D:\\c#\\C# Blackjack\\newBlackJack\\C# Blackjack\\C# Blackjack.csproj",
       "packagesPath": "C:\\Users\\raisk\\.nuget\\packages\\",
-      "outputPath": "D:\\c#\\C# Blackjack\\C# Blackjack\\obj\\",
+      "outputPath": "D:\\c#\\C# Blackjack\\newBlackJack\\C# Blackjack\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
