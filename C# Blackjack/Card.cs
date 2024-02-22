@@ -17,7 +17,7 @@ public class Card
     //Card package initialize from json file
     public static void PackInit()
     {
-        string fileName = "CardPackage.json";
+        string fileName = "..\\..\\..\\Data\\CardPackage.json";
 
         if(!File.Exists(fileName))
         {

@@ -1,3 +1,0 @@
-Ilya 1280 14 13
-Nick 0 1 1
-Nikita 200 0 0

@@ -4,14 +4,16 @@ namespace C__Blackjack.Data;
 public class DataHandler
 {
     private readonly string fileName = "PlayersData.json"; // name of file with data about players
-    private List<PlayerData> data = new List<PlayerData>(); //information about all players
+    private List<PlayerData>? data = new List<PlayerData>(); //information about all players
 	public PlayerData CurrentPlayer { get; set; }
     private int id; // Current user id in data list
 	public DataHandler()
     {
         if (!File.Exists(fileName))
         {
-            File.Create(fileName);
+            File.Create(fileName).Close();
+            string emptyJsonString = JsonSerializer.Serialize<List<PlayerData>>(data);
+            File.WriteAllText(fileName, emptyJsonString);
         }
 
 		data = JsonSerializer.Deserialize<List<PlayerData>>(File.ReadAllText(fileName))

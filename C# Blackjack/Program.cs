@@ -2,6 +2,9 @@
 
 try
 {
-	Game game = new Game();
+	var game = new Game();
 }
-catch { }
+catch(Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
