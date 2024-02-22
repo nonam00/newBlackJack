@@ -2,14 +2,21 @@
 
 This is my .NET Fundamentals exam project for **Microsoft Certification**.
 
+## Requirements  
+- git
+- .NET SDK - version 6 or newer
+
 ## Description
 
 This application provides the ability to play a card game named **Blackjack**. In addition to the functionality of the game itself, this application allows you to store user data and statistics
 
 ## Usage
 
-1. Clone or download the repository to your computer.
-2. Open .exe file in path \C# Blackjack\bin\Release\net7.0.
+1. Clone or download the repository to your computer:
+   - Open terminal in the desired directory
+   - Type: ```git clone "https://github.com/nonam00/newBlackJack"```
+
+2. Run cloned app by typing ```dotnet run```
 3. Enjoy the game
 
 ## Blackjack Rules
